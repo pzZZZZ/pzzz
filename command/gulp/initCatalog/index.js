@@ -110,7 +110,7 @@ module.exports = (name)=>{
                             if (err) {
                                 throw err;
                             }
-                            console.log('make dir success.');
+                            // console.log('make dir success.');
                             next()
                         });
                   },
@@ -138,6 +138,8 @@ module.exports = (name)=>{
                   if (err) {
                       throw err;
                   }
+                  // (require('./gulpfileHandle.js'))()
+                  console.log('suc')
                 })
              });
 
