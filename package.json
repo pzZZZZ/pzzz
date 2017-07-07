@@ -1,0 +1,32 @@
+{
+  "name": "pzzz",
+  "version": "1.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "co": "^4.6.0",
+    "co-prompt": "^1.0.0",
+    "colors": "1.0.3",
+    "commander": "^2.9.0",
+    "corser": "~2.0.0",
+    "ecstatic": "^2.0.0",
+    "http-proxy": "^1.8.1",
+    "opener": "~1.4.0",
+    "optimist": "0.6.x",
+    "portfinder": "^1.0.13",
+    "union": "~0.4.3"
+  },
+  "bin": {
+    "pz": "bin/pz"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "async.js": "^0.9.5"
+  }
+}

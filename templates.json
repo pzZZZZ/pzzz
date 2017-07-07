@@ -1,0 +1,24 @@
+{
+  "tpl": {
+    "nodeppt": {
+      "url": "https://github.com/ksky521/nodeppt.git",
+      "branch": "master",
+      "desc": "最好的网页版演示库"
+    },
+    "vuespa@2": {
+      "url": "https://github.com/pzZZZZ/vue-spa-template.git",
+      "branch": "master",
+      "desc": "基于Vue2的SPA脚手架"
+    },
+    "vue@1": {
+      "url": "https://github.com/pzZZZZ/vue-cli-multi-page.git",
+      "branch": "master",
+      "desc": "基于Vue1的多页面脚手架"
+    },
+    "vue@2": {
+      "url": "https://github.com/bluefox1688/vue-cli-multi-page.git",
+      "branch": "master",
+      "desc": "webpack2+vuejs2+vuxUI2的多页面脚手架"
+    }
+  }
+}

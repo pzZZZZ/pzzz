@@ -1,0 +1,67 @@
+#!/usr/bin/env node --harmony
+'use strict'
+ // 定义脚手架的文件路径
+process.env.NODE_PATH = __dirname + '/../node_modules/'
+
+const program = require('commander')
+
+ // 定义当前版本
+program
+    .version(require('../package').version )
+
+// 定义使用方法
+program
+    .usage('<command>')
+
+
+program
+    .command('add')
+    .description('增加一个新模板')
+  .alias('a')
+  .action(() => {
+    require('../command/add')()
+  })
+
+program
+    .command('list')
+    .description('列出所有模板列表')
+    .alias('l')
+    .action(() => {
+        require('../command/list')()
+    })
+
+program
+    .command('init')
+    .description('初始化项目')
+  .alias('i')
+  .action(() => {
+    require('../command/init')()
+  })
+
+program
+    .command('delete')
+    .description('删除模板')
+    .alias('d')
+    .action(() => {
+        require('../command/delete')()
+    })
+program
+    .command('sever')
+    .description('开启server')
+  .alias('s')
+  .option('-p', 'port')
+  .action((option) => {
+     require('../command/server')(option)
+  })
+program
+    .command('gulp')
+    .description('初始化一个gulp')
+  .action((option) => {
+     require('../command/gulp/init')()
+  })
+
+    program.parse(process.argv)
+
+    if(!program.args.length){
+      program.help()
+    }
