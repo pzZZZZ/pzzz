@@ -6,7 +6,7 @@ const fs = require('fs')
 const async = require('async')
 var config = '';
 var itemName = '';
-module.exports = (name)=>{
+module.exports = (name,option)=>{
   itemName = name;
   async.parallel({
     //创建文件夹
@@ -14,74 +14,74 @@ module.exports = (name)=>{
     fs.mkdir(`./styles`, function (err) {
     if(err)
       throw err;
-    console.log('创建styles成功')
+    //console.log('创建styles成功')
     next()
     });
   },scripts(next){
     fs.mkdir(`./scripts`, function (err) {
     if(err)
       throw err;
-     console.log('创建scripts成功')
+     //console.log('创建scripts成功')
      next()
     });
   },libs(next){
     fs.mkdir(`./libs`, function (err) {
     if(err)
       throw err;
-     console.log('创建libs成功')
+  //console.log('创建libs成功')
      next()
     });
   },images(next){
     fs.mkdir(`./images`, function (err) {
     if(err)
       throw err;
-     console.log('创建images成功')
+  //console.log('创建images成功')
      next()
     });
   }},function(err,res){
       fs.mkdir(`./src`, function (err) {
       if(err)
         throw err;
-       console.log('创建src成功')
+    //console.log('创建src成功')
        async.parallel({
          //移动文件夹
          rmstyles(next){
            fs.rename('./styles','./src/styles', function (err) {
               if(err) {
-                console.error(err);
+             console.error(err);
                 return;
               }
-              console.log('styles移动成功')
+           //console.log('styles移动成功')
               next()
             });
          },
          rmimages(next){
            fs.rename('./images','./src/images', function (err) {
               if(err) {
-                console.error(err);
+             console.error(err);
                 return;
               }
-              console.log('images移动成功')
+          // console.log('images移动成功')
               next()
             });
          },
          rmlibs(next){
            fs.rename('./libs','./src/libs', function (err) {
               if(err) {
-                console.error(err);
+             console.error(err);
                 return;
               }
-              console.log('libs移动成功')
+          // console.log('libs移动成功')
               next()
             });
          },
          rmscripts(next){
            fs.rename('./scripts','./src/scripts', function (err) {
               if(err) {
-                console.error(err);
+             console.error(err);
                 return;
               }
-              console.log('scripts移动成功')
+          // console.log('scripts移动成功')
               next()
             });
          }
@@ -94,7 +94,7 @@ module.exports = (name)=>{
                     throw err;
                 }
                 // 读取文件成功
-                // console.log( data.toString())
+              //  console.log( data.toString())
                 config = data.toString()
                 next()
             });
@@ -103,43 +103,47 @@ module.exports = (name)=>{
                  if (err) {
                      throw err;
                  }
-                console.log('package.json生成成功');
+            // console.log('package.json生成成功');
                 async.series({
                   mkfile(next){
                     fs.mkdir(`./${itemName}`, function(err) {
                             if (err) {
                                 throw err;
                             }
-                            // console.log('make dir success.');
+                   //         console.log('make dir success.');
                             next()
                         });
                   },
                   rmPack(next){
                     fs.rename('./package.txt',`./${itemName}/package.json`, function (err) {
                        if(err) {
-                         console.error(err);
+                      console.error(err);
                          return;
                        }
-                       console.log('package.txt移动成功')
+                  //  console.log('package.txt移动成功')
                        next()
                      });
                   },
                   rmSrc(next){
                     fs.rename('./src',`./${itemName}/src`, function (err) {
                        if(err) {
-                         console.error(err);
+                      console.error(err);
                          return;
                        }
-                       console.log('src移动成功')
+                   // console.log('src移动成功')
                        next()
                      });
+                  },
+                  gulpfileInclude(next){
+                   console.log('gulpfile')
+                      require('./gulpfileHandle.js')(itemName,option)
                   }
                 },function(err,res){
                   if (err) {
                       throw err;
                   }
-                  // (require('./gulpfileHandle.js'))()
-                  console.log('suc')
+                  
+                
                 })
              });
 
