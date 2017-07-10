@@ -6,6 +6,10 @@ const fs = require('fs')
 const async = require('async')
 var config = '';
 var itemName = '';
+const path = require('path');
+var a = path.dirname(__dirname+'/command/gulp/package.json')
+// var myPath = path.dirname(__dirname + '/test/util you.mp3');
+console.log(a)
 module.exports = (name,option)=>{
   itemName = name;
   async.parallel({
@@ -88,7 +92,8 @@ module.exports = (name,option)=>{
        },function(err,res){
           async.series ({
             readPackage(next){
-            fs.readFile('./command/gulp/package.json', 'utf-8', function(err, data) {
+              //'./command/gulp/package.json'
+            fs.readFile(a, 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
                     throw err;

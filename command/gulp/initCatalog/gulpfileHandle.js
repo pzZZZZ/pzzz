@@ -28,7 +28,7 @@ module.exports = (name,option)=>{
                     throw err;
                 }
                 config += data.toString()
-                console.log(config)
+                // console.log(config)
                 next()
             });
    		}

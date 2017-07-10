@@ -1,6 +1,6 @@
 {
   "name": "pzzz",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "union": "~0.4.3"
   },
   "bin": {
-    "pz": "bin/pz"
+    "pz":"bin/pz"
   },
   "keywords": [],
   "author": "",
