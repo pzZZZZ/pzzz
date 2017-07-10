@@ -15,7 +15,7 @@ module.exports = (name,option)=>{
                 }
                 // 读取文件成功
                 // console.log( data.toString())
-                config = data.toString()
+                config += data.toString()
                 // console.log('读取header成功')
                 next()
             });
@@ -56,6 +56,7 @@ module.exports = (name,option)=>{
 	ReadgulpEs6(next){
 
    		if(option.es6 =='y'||option.es6=='Y'){
+   			console.log('es')
    			fs.readFile(path.resolve(__dirname,'../gulpfile','jsHandle.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
@@ -81,22 +82,22 @@ module.exports = (name,option)=>{
 			                 if (err) {
 			                     throw err;
 			                 }
+			                 console.log('webpackConfig生成成功')
 			                 next()
 			             	})
                 	},
                 	RmWebpack(next){
+                		console.log('zzz')
                 		 fs.rename('./webpack.config.js',`./${itemName}/webpack.config.js`, function (err) {
 		                       if(err) {
 		                         console.error(err);
 		                         return;
 		                       }
-		                       // console.log('webpackConfig移动成功')
+		                       console.log('webpackConfig移动成功')
 		                       next()
 		                     });
                 	},
                 	ReadBabel(next){
-
-										//'./command/gulp/gulpfile/.babelrc'
                 			fs.readFile(path.resolve(__dirname,'../gulpfile','.babelrc'), 'utf-8', function(err, data) {
 					              // 读取文件失败/错误
 					                if (err) {
@@ -143,12 +144,16 @@ module.exports = (name,option)=>{
 		                       next()
 		                     });
                 	}
+                },function(){
+                	 next()
                 })
 
-
+                
 
             });
-   		}else{
+
+
+   		} else{
 
 					let jsconfig =`gulp.task('webpackjs', function () {
 					     .pipe(uglify({
@@ -161,8 +166,10 @@ module.exports = (name,option)=>{
 					    .pipe(gulp.dest('./build/js'));
 					});`
 					config +=jsconfig
+					next()
 			}
-			next()
+ 
+			
    	},
 		WriteServer(next){
 			let serverOption = `
@@ -202,7 +209,6 @@ module.exports = (name,option)=>{
 			`
 			if(option.server =='y'||option.server=='Y'){
 				config+=`${serverOption}`
-
 				next()
 			}else{
 				next()
@@ -223,7 +229,7 @@ module.exports = (name,option)=>{
 			var watch =''
 			if(option.server == 'y'||option.server=='Y'){
 				 watch = `gulp.task('build',function(){
-					gulp.start('webserver',done)
+					gulp.start('webserver')
 				 watch('./src/styles/*.scss',batch(function (events, done) {
 					gulp.start('scss', done);
 				 }));
@@ -257,7 +263,6 @@ module.exports = (name,option)=>{
 			config+=`${libs}
 			${images}
 			${watch}`
-
 			next()
 
    	},
@@ -268,7 +273,7 @@ module.exports = (name,option)=>{
                      throw err;
                  }
                  console.log('目录已生成完毕')
-								   process.exit()
+				 process.exit()
                 next()
 
             })

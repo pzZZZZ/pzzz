@@ -14,7 +14,7 @@ module.exports = ()=>{
     let catalogName = yield prompt('请输入要创建的项目名: ')
     let es6 = yield prompt('是否需要编译js(Y/N): ')
     let scss = yield prompt('是否需要编译scss(Y/N): ')
-    let server = yield prompt('是否需要安装webserver')
+    let server = yield prompt('是否需要安装webserver: ')
     let option = {
         catalogName,
         scss,
