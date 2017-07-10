@@ -1,5 +1,6 @@
 const fs = require('fs')
 const async = require('async')
+const path = require('path');
 var config = ""
 var packconfig = ""
 var babelrc = ""
@@ -8,7 +9,10 @@ module.exports = (name,option)=>{
 	console.log(option)
    async.series({
    	ReadgulpHeader(next){
-   		  fs.readFile('./command/gulp/gulpfile/gulpHeader.js', 'utf-8', function(err, data) {
+
+			//'./command/gulp/gulpfile/gulpHeader.js'
+
+   		  fs.readFile(path.resolve(__dirname,'../gulpfile','gulpHeader.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
                     throw err;
@@ -21,8 +25,10 @@ module.exports = (name,option)=>{
             });
    	},
    	ReadgulpScss(next){
+			//./command/gulp/gulpfile/cssHandle.js
    		if(option.scss =='y'||'Y'){
-   			fs.readFile('./command/gulp/gulpfile/cssHandle.js', 'utf-8', function(err, data) {
+
+   			fs.readFile(path.resolve(__dirname,'../gulpfile','cssHandle.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
                     throw err;
@@ -34,8 +40,9 @@ module.exports = (name,option)=>{
    		}
    	},
 	ReadgulpEs6(next){
+		//./command/gulp/gulpfile/jsHandle.js
    		if(option.es6 =='y'||'Y'){
-   			fs.readFile('./command/gulp/gulpfile/jsHandle.js', 'utf-8', function(err, data) {
+   			fs.readFile(path.resolve(__dirname,'../gulpfile','jsHandle.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
                     throw err;
@@ -44,12 +51,13 @@ module.exports = (name,option)=>{
                 async.series({
                 	//配置webpack.config.js
                 	ReadWebpack(next){
-                			fs.readFile('./command/gulp/gulpfile/webpack.config.js', 'utf-8', function(err, data) {
+										//./command/gulp/gulpfile/webpack.config.js
+                			fs.readFile(path.resolve(__dirname,'../gulpfile','webpack.config.js'), 'utf-8', function(err, data) {
 					              // 读取文件失败/错误
 					                if (err) {
 					                    throw err;
 					                }
-					                
+
 					                packconfig = data.toString();
 					                next()
 					            });
@@ -73,12 +81,14 @@ module.exports = (name,option)=>{
 		                     });
                 	},
                 	ReadBabel(next){
-                			fs.readFile('./command/gulp/gulpfile/.babelrc', 'utf-8', function(err, data) {
+
+										//'./command/gulp/gulpfile/.babelrc'
+                			fs.readFile(path.resolve(__dirname,'../gulpfile','.babelrc'), 'utf-8', function(err, data) {
 					              // 读取文件失败/错误
 					                if (err) {
 					                    throw err;
 					                }
-					                
+
 					                babelrc = data.toString();
 					                next()
 					            });
@@ -120,7 +130,7 @@ module.exports = (name,option)=>{
 		                     });
                 	}
                 })
-                
+
                 // console.log(config)
                 next()
             });
@@ -162,7 +172,7 @@ module.exports = (name,option)=>{
                  console.log('gulpfile 已生成')
                 next()
             })
-               
+
    	}
    })
 }

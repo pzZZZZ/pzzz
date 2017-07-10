@@ -3,7 +3,9 @@ const co = require('co')
 const prompt = require('co-prompt')
 const chalk = require('chalk')
 const fs = require('fs')
-const initCatalog = require('./initCatalog/index.js');
+const initCatalog = require('./initCatalog/index.js')
+const path = require('path')
+// console.log( `dirname = ${path.dirname(__dirname)}`)
 module.exports = ()=>{
   co(function *() {
 

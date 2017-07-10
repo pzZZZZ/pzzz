@@ -10,6 +10,8 @@ const path = require('path');
 var a = path.dirname(__dirname+'/command/gulp/package.json')
 // var myPath = path.dirname(__dirname + '/test/util you.mp3');
 console.log(a)
+console.log(path.resolve(__dirname,'../','package.json'))
+
 module.exports = (name,option)=>{
   itemName = name;
   async.parallel({
@@ -93,7 +95,7 @@ module.exports = (name,option)=>{
           async.series ({
             readPackage(next){
               //'./command/gulp/package.json'
-            fs.readFile(a, 'utf-8', function(err, data) {
+            fs.readFile(path.resolve(__dirname,'../','package.json'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
                     throw err;
@@ -147,8 +149,8 @@ module.exports = (name,option)=>{
                   if (err) {
                       throw err;
                   }
-                  
-                
+
+
                 })
              });
 
