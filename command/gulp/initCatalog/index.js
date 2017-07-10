@@ -7,10 +7,7 @@ const async = require('async')
 var config = '';
 var itemName = '';
 const path = require('path');
-var a = path.dirname(__dirname+'/command/gulp/package.json')
-// var myPath = path.dirname(__dirname + '/test/util you.mp3');
-console.log(a)
-console.log(path.resolve(__dirname,'../','package.json'))
+
 
 module.exports = (name,option)=>{
   itemName = name;

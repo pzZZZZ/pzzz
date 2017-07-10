@@ -6,12 +6,8 @@ var packconfig = ""
 var babelrc = ""
 module.exports = (name,option)=>{
 	var itemName = name;
-	console.log(option)
    async.series({
    	ReadgulpHeader(next){
-
-			//'./command/gulp/gulpfile/gulpHeader.js'
-
    		  fs.readFile(path.resolve(__dirname,'../gulpfile','gulpHeader.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
@@ -20,14 +16,13 @@ module.exports = (name,option)=>{
                 // 读取文件成功
                 // console.log( data.toString())
                 config = data.toString()
-                // console.log(config)
+                // console.log('读取header成功')
                 next()
             });
    	},
    	ReadgulpScss(next){
-			//./command/gulp/gulpfile/cssHandle.js
-   		if(option.scss =='y'||'Y'){
-
+			// console.log(option.scss == 'y'||option.scss=='Y')
+   		if(option.scss =='y'||option.scss=='Y'){
    			fs.readFile(path.resolve(__dirname,'../gulpfile','cssHandle.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
@@ -37,11 +32,30 @@ module.exports = (name,option)=>{
                 // console.log(config)
                 next()
             });
-   		}
+   		}else{
+
+				let css = `var cssFiles = [
+				  './src/styles/**/*'
+				];
+				gulp.task('scss', function () {
+				  gulp.src(cssFiles)
+				    .pipe(autoprefixer({
+				            browsers: ['last 4 versions', 'Android >= 4.0','iOS >=7']
+				        }))
+				    .pipe(minifyCSS())
+				    .pipe(rename(function(path){
+				       path.extname = ".min.css";
+				    }))
+				    .pipe(gulp.dest('./build/styles/'));
+				});
+				`
+				config += css;
+				next()
+			}
    	},
 	ReadgulpEs6(next){
-		//./command/gulp/gulpfile/jsHandle.js
-   		if(option.es6 =='y'||'Y'){
+
+   		if(option.es6 =='y'||option.es6=='Y'){
    			fs.readFile(path.resolve(__dirname,'../gulpfile','jsHandle.js'), 'utf-8', function(err, data) {
               // 读取文件失败/错误
                 if (err) {
@@ -131,12 +145,73 @@ module.exports = (name,option)=>{
                 	}
                 })
 
-                // console.log(config)
-                next()
+
+
             });
-   		}
+   		}else{
+
+					let jsconfig =`gulp.task('webpackjs', function () {
+					     .pipe(uglify({
+					        //mangle: true,//类型：Boolean 默认：true 是否修改变量名
+					        mangle: {except: ['require' ,'exports' ,'module']},//排除混淆关键字
+					        mangle: true,//类型：Boolean 默认：true 是否修改变量名
+					        compress: false,//类型：Boolean 默认：true 是否完全压缩
+					        preserveComments: 'all' //保留所有注释
+					  	  }))
+					    .pipe(gulp.dest('./build/js'));
+					});`
+					config +=jsconfig
+			}
+			next()
    	},
+		WriteServer(next){
+			let serverOption = `
+			// 引入 gulp-webserver 模块
+			var webserver = require('gulp-webserver');
+			gulp.task('webserver', function () {
+			  gulp.src('./')
+			    .pipe(webserver({
+			      host: 'localhost',
+			      port: 8080,
+			      directoryListing: {
+			        enable: true,
+			        path: './'
+			      },
+			      livereload: true,
+			      // mock 数据
+			      middleware: function (req, res, next) {
+			        var urlObj = url.parse(req.url, true);
+			        switch (urlObj.pathname) {
+			          case '/api/orders.php':
+			            // res.setHeader('Content-Type', 'application/json');
+			            // fs.readFile('./mock/list.json', function (err, data) {
+			            //   res.end(data);
+			            // });
+			            return;
+			          case '/api/user':
+			            // ...
+
+			          case '/api/cart':
+			            // ...
+			            return;
+			        }
+			        next();
+			      }
+			    }))
+			});
+			`
+			if(option.server =='y'||option.server=='Y'){
+				config+=`${serverOption}`
+
+				next()
+			}else{
+				next()
+
+			}
+
+		},
    	WriteGulpWatch(next){
+
    			let libs = `gulp.task('copy-libs',function(){
 		   		gulp.src('./src/libs/**/*')
 		    		.pipe(gulp.dest('./build/libs'));
@@ -145,32 +220,57 @@ module.exports = (name,option)=>{
 			 	gulp.src('./src/images/**/*')
 			        .pipe(gulp.dest('./build/images/'));
 			});	`
-			let watch = `gulp.task('build',function(){
-			 watch('./src/styles/*.scss',batch(function (events, done) {
-			  gulp.start('scss', done);
-			 }));
-			 watch('./src/images/**/*',batch(function (events, done) {
-			  gulp.start('copy-images', done);
-			 }));
-			 watch('./src/scripts/*.js',batch(function (events, done) {
-			  gulp.start('webpackjs', done);
-			 }));
-			  watch('./src/libs/**/*',batch(function (events, done) {
-			  gulp.start('copy-libs', done);
-			 }));
-			});`
+			var watch =''
+			if(option.server == 'y'||option.server=='Y'){
+				 watch = `gulp.task('build',function(){
+					gulp.start('webserver',done)
+				 watch('./src/styles/*.scss',batch(function (events, done) {
+					gulp.start('scss', done);
+				 }));
+				 watch('./src/images/**/*',batch(function (events, done) {
+					gulp.start('copy-images', done);
+				 }));
+				 watch('./src/scripts/*.js',batch(function (events, done) {
+					gulp.start('webpackjs', done);
+				 }));
+					watch('./src/libs/**/*',batch(function (events, done) {
+					gulp.start('copy-libs', done);
+				 }));
+				});`
+			}else{
+				 watch = `gulp.task('build',function(){
+				 watch('./src/styles/*.scss',batch(function (events, done) {
+					gulp.start('scss', done);
+				 }));
+				 watch('./src/images/**/*',batch(function (events, done) {
+					gulp.start('copy-images', done);
+				 }));
+				 watch('./src/scripts/*.js',batch(function (events, done) {
+					gulp.start('webpackjs', done);
+				 }));
+					watch('./src/libs/**/*',batch(function (events, done) {
+					gulp.start('copy-libs', done);
+				 }));
+				});`
+			}
+
 			config+=`${libs}
 			${images}
 			${watch}`
+
 			next()
+
    	},
    	WritegulpHeader(next){
+
    		 fs.writeFile(`./${itemName}/gulpfile.js`, config, function(err) {
                  if (err) {
                      throw err;
                  }
-                 console.log('gulpfile 已生成')
+                 console.log('目录已生成完毕')
+								   process.exit()
                 next()
+
             })
 
    	}

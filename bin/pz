@@ -4,12 +4,20 @@
 process.env.NODE_PATH = __dirname + '/../node_modules/'
 
 const program = require('commander')
+console.log(".______    ________   ________   ________")
+console.log("|   _  \  |       /  |       /  |       /")
+console.log("|  |_)  |  `---/  /   `---/  /   `---/  /")
+console.log("|   ___/     /  /       /  /       /  /")
+console.log("|  |        /  /----.  /  /----.  /  /----.")
+console.log("| _|       /________| /________| /________|")
 
  // 定义当前版本
 program
     .version(require('../package').version )
 
 // 定义使用方法
+
+
 program
     .usage('<command>')
 

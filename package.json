@@ -1,6 +1,6 @@
 {
   "name": "pzzz",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,12 +21,15 @@
     "union": "~0.4.3"
   },
   "bin": {
-    "pz":"bin/pz"
+    "pz": "bin/pz"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "async.js": "^0.9.5"
+    "async.js": "^0.9.5",
+    "co-prompt": "^1.0.0",
+    "colors-cli": "^1.0.9",
+    "figlet": "^1.2.0"
   }
 }
