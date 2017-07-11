@@ -34,20 +34,21 @@ module.exports = (name,option)=>{
             });
    		}else{
 
-				let css = `var cssFiles = [
-				  './src/styles/**/*'
-				];
-				gulp.task('scss', function () {
-				  gulp.src(cssFiles)
-				    .pipe(autoprefixer({
-				            browsers: ['last 4 versions', 'Android >= 4.0','iOS >=7']
-				        }))
-				    .pipe(minifyCSS())
-				    .pipe(rename(function(path){
-				       path.extname = ".min.css";
-				    }))
-				    .pipe(gulp.dest('./build/styles/'));
-				});
+				let css = `
+var cssFiles = [
+  './src/styles/**/*'
+];
+gulp.task('scss', function () {
+  gulp.src(cssFiles)
+    .pipe(autoprefixer({
+            browsers: ['last 4 versions', 'Android >= 4.0','iOS >=7']
+        }))
+    .pipe(minifyCSS())
+    .pipe(rename(function(path){
+       path.extname = ".min.css";
+    }))
+    .pipe(gulp.dest('./build/styles/'));
+});
 				`
 				config += css;
 				next()
@@ -82,7 +83,7 @@ module.exports = (name,option)=>{
 			                 if (err) {
 			                     throw err;
 			                 }
-			                 console.log('webpackConfig生成成功')
+			                //  console.log('webpackConfig生成成功')
 			                 next()
 			             	})
                 	},
@@ -93,7 +94,7 @@ module.exports = (name,option)=>{
 		                         console.error(err);
 		                         return;
 		                       }
-		                       console.log('webpackConfig移动成功')
+		                      //  console.log('webpackConfig移动成功')
 		                       next()
 		                     });
                 	},
@@ -148,64 +149,65 @@ module.exports = (name,option)=>{
                 	 next()
                 })
 
-                
+
 
             });
 
 
    		} else{
 
-					let jsconfig =`gulp.task('webpackjs', function () {
-					     .pipe(uglify({
-					        //mangle: true,//类型：Boolean 默认：true 是否修改变量名
-					        mangle: {except: ['require' ,'exports' ,'module']},//排除混淆关键字
-					        mangle: true,//类型：Boolean 默认：true 是否修改变量名
-					        compress: false,//类型：Boolean 默认：true 是否完全压缩
-					        preserveComments: 'all' //保留所有注释
-					  	  }))
-					    .pipe(gulp.dest('./build/js'));
-					});`
+					let jsconfig =`
+gulp.task('webpackjs', function () {
+     .pipe(uglify({
+        //mangle: true,//类型：Boolean 默认：true 是否修改变量名
+        mangle: {except: ['require' ,'exports' ,'module']},//排除混淆关键字
+        mangle: true,//类型：Boolean 默认：true 是否修改变量名
+        compress: false,//类型：Boolean 默认：true 是否完全压缩
+        preserveComments: 'all' //保留所有注释
+  	  }))
+    .pipe(gulp.dest('./build/js'));
+});`
 					config +=jsconfig
 					next()
 			}
- 
-			
+
+
    	},
 		WriteServer(next){
 			let serverOption = `
-			// 引入 gulp-webserver 模块
-			var webserver = require('gulp-webserver');
-			gulp.task('webserver', function () {
-			  gulp.src('./')
-			    .pipe(webserver({
-			      host: 'localhost',
-			      port: 8080,
-			      directoryListing: {
-			        enable: true,
-			        path: './'
-			      },
-			      livereload: true,
-			      // mock 数据
-			      middleware: function (req, res, next) {
-			        var urlObj = url.parse(req.url, true);
-			        switch (urlObj.pathname) {
-			          case '/api/orders.php':
-			            // res.setHeader('Content-Type', 'application/json');
-			            // fs.readFile('./mock/list.json', function (err, data) {
-			            //   res.end(data);
-			            // });
-			            return;
-			          case '/api/user':
-			            // ...
+// 引入 gulp-webserver 模块
+var webserver = require('gulp-webserver');
+gulp.task('webserver', function () {
+  gulp.src('./')
+    .pipe(webserver({
+      host: 'localhost',
+      port: 8080,
+      directoryListing: {
+        enable: true,
+        path: './'
+      },
+      livereload: true,
+      // mock 数据
+      middleware: function (req, res, next) {
+        var urlObj = url.parse(req.url, true);
+        switch (urlObj.pathname) {
+          case '/api/orders.php':
+            // res.setHeader('Content-Type', 'application/json');
+            // fs.readFile('./mock/list.json', function (err, data) {
+            //   res.end(data);
+            // });
+            return;
+          case '/api/user':
+            // ...
 
-			          case '/api/cart':
-			            // ...
-			            return;
-			        }
-			        next();
-			      }
-			    }))
-			});
+          case '/api/cart':
+            // ...
+            return;
+        }
+        next();
+      }
+    }))
+});
 			`
 			if(option.server =='y'||option.server=='Y'){
 				config+=`${serverOption}`
@@ -218,46 +220,53 @@ module.exports = (name,option)=>{
 		},
    	WriteGulpWatch(next){
 
-   			let libs = `gulp.task('copy-libs',function(){
-		   		gulp.src('./src/libs/**/*')
-		    		.pipe(gulp.dest('./build/libs'));
-			})`
-			let images = `gulp.task('copy-images', function () {
-			 	gulp.src('./src/images/**/*')
-			        .pipe(gulp.dest('./build/images/'));
-			});	`
+   			let libs = `
+gulp.task('copy-libs',function(){
+ 		gulp.src('./src/libs/**/*')
+  		.pipe(gulp.dest('./build/libs'));
+})
+			`
+			let images = `
+gulp.task('copy-images', function () {
+ 	gulp.src('./src/images/**/*')
+        .pipe(gulp.dest('./build/images/'));
+});
+			`
 			var watch =''
 			if(option.server == 'y'||option.server=='Y'){
-				 watch = `gulp.task('build',function(){
-					gulp.start('webserver')
-				 watch('./src/styles/*.scss',batch(function (events, done) {
-					gulp.start('scss', done);
-				 }));
-				 watch('./src/images/**/*',batch(function (events, done) {
-					gulp.start('copy-images', done);
-				 }));
-				 watch('./src/scripts/*.js',batch(function (events, done) {
-					gulp.start('webpackjs', done);
-				 }));
-					watch('./src/libs/**/*',batch(function (events, done) {
-					gulp.start('copy-libs', done);
-				 }));
-				});`
+				 watch = `
+gulp.task('build',function(){
+gulp.start('webserver')
+watch('./src/styles/*.scss',batch(function (events, done) {
+gulp.start('scss', done);
+}));
+watch('./src/images/**/*',batch(function (events, done) {
+gulp.start('copy-images', done);
+}));
+watch('./src/scripts/*.js',batch(function (events, done) {
+gulp.start('webpackjs', done);
+}));
+watch('./src/libs/**/*',batch(function (events, done) {
+gulp.start('copy-libs', done);
+}));
+});`
 			}else{
-				 watch = `gulp.task('build',function(){
-				 watch('./src/styles/*.scss',batch(function (events, done) {
-					gulp.start('scss', done);
-				 }));
-				 watch('./src/images/**/*',batch(function (events, done) {
-					gulp.start('copy-images', done);
-				 }));
-				 watch('./src/scripts/*.js',batch(function (events, done) {
-					gulp.start('webpackjs', done);
-				 }));
-					watch('./src/libs/**/*',batch(function (events, done) {
-					gulp.start('copy-libs', done);
-				 }));
-				});`
+				 watch = `
+gulp.task('build',function(){
+watch('./src/styles/*.scss',batch(function (events, done) {
+gulp.start('scss', done);
+}));
+watch('./src/images/**/*',batch(function (events, done) {
+gulp.start('copy-images', done);
+}));
+watch('./src/scripts/*.js',batch(function (events, done) {
+gulp.start('webpackjs', done);
+}));
+watch('./src/libs/**/*',batch(function (events, done) {
+gulp.start('copy-libs', done);
+}));
+});
+				`
 			}
 
 			config+=`${libs}

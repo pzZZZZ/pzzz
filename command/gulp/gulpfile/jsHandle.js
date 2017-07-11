@@ -1,5 +1,6 @@
+
 var path = require("path");
-var srcDir = './src'
+var srcDir = './src';
 gulp.task('webpackjs', function () {
      webpack(require('./webpack.config.js'))
      .pipe(uglify({
