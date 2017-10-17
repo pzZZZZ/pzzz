@@ -243,7 +243,7 @@ gulp.start('scss', done);
 watch('./src/images/**/*',batch(function (events, done) {
 gulp.start('copy-images', done);
 }));
-watch('./src/scripts/*.js',batch(function (events, done) {
+watch('./src/*.js',batch(function (events, done) {
 gulp.start('webpackjs', done);
 }));
 watch('./src/libs/**/*',batch(function (events, done) {
@@ -259,7 +259,7 @@ gulp.start('scss', done);
 watch('./src/images/**/*',batch(function (events, done) {
 gulp.start('copy-images', done);
 }));
-watch('./src/scripts/*.js',batch(function (events, done) {
+watch('./src/*.js',batch(function (events, done) {
 gulp.start('webpackjs', done);
 }));
 watch('./src/libs/**/*',batch(function (events, done) {
